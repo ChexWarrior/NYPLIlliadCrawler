@@ -1,0 +1,19 @@
+{
+    "name": "andy/illiad",
+    "authors": [
+        {
+            "name": "ChexWarrior",
+            "email": "aplehm@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.5",
+        "symfony/dom-crawler": "^5.0",
+        "symfony/css-selector": "^5.0"
+    },
+    "autoload": {
+      "psr-4": {
+        "Chexwarrior\\": "src/"
+      }
+    }
+}
