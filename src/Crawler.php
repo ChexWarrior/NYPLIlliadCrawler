@@ -5,6 +5,11 @@ namespace Chexwarrior;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Grabs HTML from ILLiad account
+ * 
+ * @package Chexwarrior
+ */
 class Crawler
 {
     public const LOGIN_URL = 'https://nypl.illiad.oclc.org/illiad/NYP/illiad.dll';
