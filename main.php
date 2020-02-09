@@ -15,7 +15,5 @@ use Chexwarrior\Crawler;
 $username = $argv[1];
 $password = $argv[2];
 
-unlink('./test.html');
 $crawler = new Crawler();
 $html = $crawler->makePost($username, $password);
-file_put_contents('./test.html', $html);
