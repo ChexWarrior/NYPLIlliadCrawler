@@ -3,7 +3,8 @@
 namespace Chexwarrior;
 
 /**
- * Responsible for creating, updating and saving outstanding requests file
+ * Responsible for saving and loading save file of outstanding requests
+ * Responsible for determining which outstanding requests have changed
  *
  * @package Chexwarrior
  */
@@ -13,7 +14,7 @@ class Saver
     {
         $fileContents = file_get_contents($filePath);
 
-        return json_decode($fileContents);
+        return json_decode($fileContents, true);
     }
 
     public function saveFile(string $filePath, array $newContents): void
@@ -23,14 +24,45 @@ class Saver
         file_put_contents($filePath, $jsonContent);
     }
 
-    public function updateRequests(array $newRequests, array $savedRequests): array
+    /**
+     * Determines which requests have changed and should send a notification
+     *
+     * @param array $newRequests
+     * @param array $savedRequests
+     * @return array
+     */
+    public function determineChangedRequests(array $newRequests, array $savedRequests): array
     {
+        $changedRequests = [];
+        foreach ($newRequests as $request) {
+            $transactionId = array_key_first($request);
+            ['status' => $status, 'title' => $title] = $request;
 
-        // Remove any contents that in in $savedRequests and not in $newRequests
+            // Check if we already have a record of this transaction
+            if (key_exists($transactionId, $savedRequests)) {
+                $savedRequest = $savedRequests[$transactionId];
+                ['status' => $savedStatus] = $savedRequest;
 
-        // Add any contents that are in $newRequests and not in $savedRequests
+                // Notify if status changed
+                if ($savedStatus !== $status) {
+                    $changedRequests[] = $request;
+                }
 
-        // Update any contents in $savedRequests that are in $newRequests
+            // Notify about any records not in $savedRequests
+            } else {
+                $request['status'] = 'new';
+                $changedRequests[] = $request;
+            }
+        }
 
+        /**
+         * Check for requests in $savedRequests not in $newRequests,
+         * this indicates requests that have finished
+         */
+        $finishedRequests = array_diff($savedRequests, $newRequests);
+        array_walk($finishedRequests, fn(array &$i) => $i['status'] = 'finished');
+        $changedRequests += $finishedRequests;
+
+        return $changedRequests;
     }
 }
