@@ -18,10 +18,13 @@ class Parser
         // Filter to Outstanding Requests Table rows
         $crawler = $crawler->filter('#content div.default-table table tbody tr');
         $outstandingRequests = $crawler->each(function (Crawler $tr, $i) {
+            $transactionId = $tr->filterXPath('//td[1]')->text();
+
             return [
-                'transaction' => $tr->filterXPath('//td[1]')->text(),
-                'title' => $tr->filterXPath('//td[3]')->text(),
-                'status' => $tr->filterXPath('//td[5]')->text(),
+                $transactionId => [
+                    'title' => $tr->filterXPath('//td[3]')->text(),
+                    'status' => $tr->filterXPath('//td[5]')->text(),
+                ],
             ];
         });
 
