@@ -19,9 +19,9 @@ class Parser
         $crawler = $crawler->filter('#content div.default-table table tbody tr');
         $outstandingRequests = $crawler->each(function (Crawler $tr, $i) {
             return [
-                'transaction' => $tr->filterXPath('/td[1]'),
-                'title' => $tr->filterXPath('/td[3]'),
-                'status' => $tr->filterXPath('/td[5]'),
+                'transaction' => $tr->filterXPath('//td[1]')->text(),
+                'title' => $tr->filterXPath('//td[3]')->text(),
+                'status' => $tr->filterXPath('//td[5]')->text(),
             ];
         });
 
