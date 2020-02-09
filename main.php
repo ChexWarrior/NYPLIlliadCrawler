@@ -3,6 +3,7 @@
 require 'vendor/autoload.php';
 
 use Chexwarrior\Crawler;
+use Chexwarrior\Parser;
 
 /**
  * 1. Make Login POST
@@ -16,4 +17,9 @@ $username = $argv[1];
 $password = $argv[2];
 
 $crawler = new Crawler();
+$parser = new Parser();
+
 $html = $crawler->makePost($username, $password);
+$outstandingRequests = $parser->parseOutstandingRequests($html);
+
+var_dump($outstandingRequests);
