@@ -13,18 +13,16 @@ class Parser
 {
     public function parseOutstandingRequests(string $html)
     {
+        $outstandingRequests = [];
         $crawler = new Crawler($html);
 
-        // Filter to Outstanding Requests Table rows
+        // Filter to Outstan/ding Requests Table rows
         $crawler = $crawler->filter('#content div.default-table table tbody tr');
-        $outstandingRequests = $crawler->each(function (Crawler $tr, $i) {
+        $crawler->each(function (Crawler $tr, $i) use (&$outstandingRequests) {
             $transactionId = $tr->filterXPath('//td[1]')->text();
-
-            return [
-                $transactionId => [
-                    'title' => $tr->filterXPath('//td[3]')->text(),
-                    'status' => $tr->filterXPath('//td[5]')->text(),
-                ],
+            $outstandingRequests[$transactionId] = [
+                'title' => $tr->filterXPath('//td[3]')->text(),
+                'status' => $tr->filterXPath('//td[5]')->text(),
             ];
         });
 
