@@ -10,7 +10,7 @@ namespace Chexwarrior;
  */
 class Saver
 {
-    public function loadFile(string $filePath): array
+    public function loadFile(string $filePath)
     {
         $fileContents = file_get_contents($filePath);
 
@@ -64,5 +64,16 @@ class Saver
         $changedRequests += $finishedRequests;
 
         return $changedRequests;
+    }
+
+    /**
+     * Removes requests with status finished
+     *
+     * @param array $requests
+     * @return void
+     */
+    public function removeFinishedRequests(array $requests)
+    {
+        return array_filter($requests, fn($r) => $r['status'] !== 'finished');
     }
 }
